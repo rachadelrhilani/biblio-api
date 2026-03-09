@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('livres', function (Blueprint $table) {
+        Schema::create('exemplaires', function (Blueprint $table) {
             $table->id();
-            $table->string('titre');
-            $table->string('auteur');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->integer('vues')->default(0);
+            $table->foreignId('livre_id')->constrained()->onDelete('cascade');
+            $table->string('etat_physique')->default('neuf');
+            $table->boolean('est_disponible')->default(true);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('livres');
+        Schema::dropIfExists('exemplaires');
     }
 };
