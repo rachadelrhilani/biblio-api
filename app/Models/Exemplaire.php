@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Exemplaire extends Model
 {
-    //
+    protected $fillable = ['livre_id', 'etat_physique', 'est_disponible'];
+
+    public function livre() {
+        return $this->belongsTo(Livre::class);
+    }
 }
