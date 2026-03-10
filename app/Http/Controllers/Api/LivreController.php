@@ -72,5 +72,31 @@ class LivreController extends Controller
             'suivi_usure_par_livre' => $livresDegrades
         ]);
     }
-    
+    // CRUD
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'titre' => 'required|string',
+            'auteur' => 'required|string',
+            'category_id' => 'required|exists:categories,id'
+        ]);
+
+        $livre = Livre::create($data);
+        return response()->json($livre, 201);
+    }
+
+    // Modifier un livre
+    public function update(Request $request, $id)
+    {
+        $livre = Livre::findOrFail($id);
+        $livre->update($request->all());
+        return response()->json($livre);
+    }
+
+    // Supprimer un livre
+    public function destroy($id)
+    {
+        Livre::destroy($id);
+        return response()->json(['message' => 'Livre supprimé de la collection']);
+    }
 }
