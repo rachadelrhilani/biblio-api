@@ -26,7 +26,7 @@ class LivreController extends Controller
         return response()->json(['success' => true, 'data' => $livres]);
     }
 
-    // filtrer par Catégorie
+    // filtrer par categorie
     public function filterByCategory($categoryName)
     {
         $livres = Livre::with(['category', 'exemplaires'])
