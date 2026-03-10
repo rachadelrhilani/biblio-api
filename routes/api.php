@@ -15,13 +15,12 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
+    // tous les livres
     Route::get('/livres', [LivreController::class, 'index']);
     // recherche par son titre
     Route::get('/livres/search', [LivreController::class, 'searchByTitle']);
-
-    // Filtre par catégorie (Paramètre dans l'URL)
+    // filtre par categorie
     Route::get('/livres/categorie/{name}', [LivreController::class, 'filterByCategory']);
-
-    // Tendances (Popularité / Nouveauté)
+    // livres populaire
     Route::get('/livres/trends', [LivreController::class, 'getTrends']);
 });

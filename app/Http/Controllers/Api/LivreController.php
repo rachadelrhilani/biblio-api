@@ -8,17 +8,17 @@ use Illuminate\Http\Request;
 
 class LivreController extends Controller
 {
-   // Liste de base (ou filtres simples)
+   // list des livres
     public function index()
     {
         $livres = Livre::with(['category', 'exemplaires'])->get();
         return response()->json(['success' => true, 'data' => $livres]);
     }
 
-    // Recherche par Titre
+    // recherche le titre
     public function searchByTitle(Request $request)
     {
-        $search = $request->query('q'); // ex: /api/livres/search?q=compost
+        $search = $request->query('q'); 
         $livres = Livre::with(['category', 'exemplaires'])
                     ->where('titre', 'like', "%$search%")
                     ->get();
@@ -26,7 +26,7 @@ class LivreController extends Controller
         return response()->json(['success' => true, 'data' => $livres]);
     }
 
-    // Filtrer par Catégorie
+    // filtrer par Catégorie
     public function filterByCategory($categoryName)
     {
         $livres = Livre::with(['category', 'exemplaires'])
@@ -37,7 +37,7 @@ class LivreController extends Controller
         return response()->json(['success' => true, 'category' => $categoryName, 'data' => $livres]);
     }
 
-    // Livres Populaires et Nouveautés
+    // livres populaires et nouveautés
     public function getTrends(Request $request)
     {
         $query = Livre::with(['category', 'exemplaires']);
