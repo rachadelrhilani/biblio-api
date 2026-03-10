@@ -8,48 +8,46 @@ use Illuminate\Http\Request;
 
 class LivreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+   // Liste de base (ou filtres simples)
     public function index()
     {
         $livres = Livre::with(['category', 'exemplaires'])->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $livres
-        ]);
+        return response()->json(['success' => true, 'data' => $livres]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    // Recherche par Titre
+    public function searchByTitle(Request $request)
     {
-        //
+        $search = $request->query('q'); // ex: /api/livres/search?q=compost
+        $livres = Livre::with(['category', 'exemplaires'])
+                    ->where('titre', 'like', "%$search%")
+                    ->get();
+
+        return response()->json(['success' => true, 'data' => $livres]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    // Filtrer par Catégorie
+    public function filterByCategory($categoryName)
     {
-        //
+        $livres = Livre::with(['category', 'exemplaires'])
+                    ->whereHas('category', function ($q) use ($categoryName) {
+                        $q->where('nom', 'like', "%$categoryName%");
+                    })->get();
+
+        return response()->json(['success' => true, 'category' => $categoryName, 'data' => $livres]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    // Livres Populaires et Nouveautés
+    public function getTrends(Request $request)
     {
-        //
-    }
+        $query = Livre::with(['category', 'exemplaires']);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        if ($request->has('popular')) {
+            $query->orderBy('vues', 'desc');
+        } elseif ($request->has('new')) {
+            $query->latest();
+        }
+
+        return response()->json(['success' => true, 'data' => $query->limit(10)->get()]);
     }
 }
