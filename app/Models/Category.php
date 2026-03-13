@@ -9,6 +9,6 @@ class Category extends Model
     protected $fillable = ['nom', 'description'];
 
     public function livre() {
-        return $this->belongsTo(Livre::class);
+        return $this->hasMany(Livre::class);
     }
 }
